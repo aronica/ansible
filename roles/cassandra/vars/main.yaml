@@ -1,0 +1,8 @@
+cluster_name: feature_cluster
+data_file_directories: /data/var/lib/cassandra/data
+commitlog_directory: /data/var/lib/cassandra/log
+saved_caches_directory: /data/var/lib/cassandra/caches
+hints_directory: /data/var/lib/cassandra/hints
+seed: 192.168.80.138
+cassandra_version: apache-cassandra-3.0.13-bin
+cassandra_version_name: apache-cassandra-3.0.13

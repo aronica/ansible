@@ -1,0 +1,17 @@
+---
+- name: Install supervisord
+  yum: name=supervisor state=present
+  become: yes
+  become_method: sudo
+
+- name: Copy Cassandra Supervisord Conf Files
+  template: src=cassandra.ini dest=/etc/supervisord.d
+  notify: Reload supervisord
+  become: yes
+  become_method: sudo
+
+- name: Starting supervisord
+  service: name=supervisord state=started enabled=yes
+  become: yes
+  become_method: sudo
+

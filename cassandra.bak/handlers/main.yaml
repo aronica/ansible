@@ -1,0 +1,7 @@
+---
+- name: Starting supervisord
+  service: name=supervisord status=started enabled=yes
+
+- name: Reload supervisord
+  supervisorctl: name=cassandra state=restarted
+

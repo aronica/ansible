@@ -1,0 +1,6 @@
+---
+- hosts: es
+  remote_user: master
+  
+  roles:
+    - elasticsearch

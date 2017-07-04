@@ -1,0 +1,4 @@
+es_url: http://wg-ais-dispatch-arck-7:9200
+seed: wg-ais-dispatch-arck-7
+kibana_version_gz: kibana-5.4.2-linux-x86_64.tar.gz
+kibana_version: kibana-5.4.2-linux-x86_64

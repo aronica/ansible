@@ -1,0 +1,22 @@
+---
+- name: Download Cassandra Binary
+  get_url: url=http://ftp.meisei-u.ac.jp/mirror/apache/dist/cassandra/3.0.13/apache-cassandra-3.0.13-bin.tar.gz dest=/data/bigdata/download/apache-cassandra-3.0.13-bin.tar.gz
+  
+- name: Extrace archive
+  unarchive: dest=/data/bigdata/app src=/data/bigdata/download/apache-cassandra-3.0.13-bin.tar.gz
+
+- name: Add Soft link
+  file: src=/data/bigdata/app/apache-cassandra-3.0.13 path=/data/bigdata/app/cassandra state=link
+
+- name: Add bin to $PATH
+  shell: echo "export PATH=$PATH:/data/bigdata/app/cassandra/bin">>/home/fangyu.fu/.bash_profile && source /home/fangyu.fu/.bash_profile
+
+- name: Deploy cassandra.conf
+  template: src=cassandra.conf dest=/data/bigdata/app/cassandra/conf
+
+- name: Install supervisord
+  yum: name=supervisord state=present
+
+- name: Copy Cassandra Supervisord Conf Files
+  template: src=cassandra.yml dest=/etc/supervisord.d
+  notify: reload supervisord

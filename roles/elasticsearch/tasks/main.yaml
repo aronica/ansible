@@ -1,0 +1,40 @@
+---
+- name: Create /data/bigdata
+  file: path=/data/bigdata state=directory
+
+- name: Create Download Directory
+  file: path=/data/bigdata/download state=directory
+
+- name: Create Directory
+  file: path=/data/bigdata/download state=directory
+
+- name: Create App Directory
+  file: path=/data/bigdata/app state=directory
+
+- name: Download Elasticsearch Binary
+  unarchive: src=/data/bigdata/app/download/elasticsearch-5.4.2.zip dest=/data/bigdata/app
+
+- name: Remove old link file
+  file: path=/data/bigdata/app/elasticsearch state=absent
+      
+- name: Add Soft link
+  file: src=/data/bigdata/app/{{es_version_name}} dest=/data/bigdata/app/elasticsearch state=link 
+#- name: Add bin to $PATH
+#  shell: echo "export PATH=$PATH:/data/bigdata/app/cassandra/bin">>/home/fangyu.fu/.bash_profile && source /home/fangyu.fu/.bash_profile
+#
+- name: Deploy elasticsearch.yml
+  template: src=elasticsearch.yml dest=/data/bigdata/app/elasticsearch/config
+
+- name: Deploy jvm.options
+  template: src=jvm.options dest=/data/bigdata/app/elasticsearch/config
+
+- name: Kill old instance
+  shell: |
+    PID=`ps -aef|grep "Elasticsearch -d"|grep -v grep|awk -F' ' '{print $2}'`
+    echo "$PID">/tmp/es.pid
+    if [ -n "${PID}" ];then
+      kill ${PID}
+    fi
+
+- name: Start Elasticsearch
+  shell: nohup /data/bigdata/app/elasticsearch/bin/elasticsearch 2>&1 1>/data/bigdata/logs/es.log &

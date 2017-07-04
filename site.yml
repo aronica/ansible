@@ -1,0 +1,12 @@
+---
+- hosts: cluster
+  remote_user: fangyu.fu
+
+  roles: 
+    - cassandra
+
+- hosts: es
+  remote_user: master
+  
+  roles:
+    - elasticsearch

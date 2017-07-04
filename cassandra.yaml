@@ -1,0 +1,19 @@
+---
+-   hosts: cluster
+    remote_user: fangyu.fu
+    sudo: yes
+    tasks:
+        - name: unarchive cassandra binary install file
+          unarchive: 
+            src: /data/bigdata/download/apache-cassandra-3.0.13-bin.tar.gz
+            dest: /data/bigdata/app
+            remote_src: yes
+        - name: create soft link
+          file:
+            src: /data/bigdata/app/apache-cassandra-3.0.13
+            dest: /data/bigdata/app/cassandra
+            owner: fangyu.fu
+            state: link
+        - name: Add cassandra bin path to /usr/local/bin
+          shell:
+            echo "export PATH=$PATH:/data/bigdata/app/cassandra/bin">>/home/fangyu.fu/.bash_profile && source /home/fangyu.fu/.bash_profile && echo "yes">/tmp/demo

@@ -1,0 +1,32 @@
+---
+- name: Create Directory
+  file: path=/data/bigdata/download state=directory
+
+- name: Create App Directory
+  file: path=/data/bigdata/app state=directory
+
+- name: Download Cassandra Binary
+  get_url: url=http://ftp.meisei-u.ac.jp/mirror/apache/dist/cassandra/3.0.13/apache-cassandra-3.0.13-bin.tar.gz dest=/data/bigdata/download/apache-cassandra-3.0.13-bin.tar.gz
+
+- name: Extrace archive
+  unarchive: dest=/data/bigdata/app src='/data/bigdata/download/{{cassandra_version}}.tar.gz'
+
+- name: Remove old link file
+  file: path=/data/bigdata/app/cassandra state=absent
+      
+- name: Add Soft link
+  file: src=/data/bigdata/app/{{cassandra_version_name}} dest=/data/bigdata/app/cassandra state=link 
+#- name: Add bin to $PATH
+#  shell: echo "export PATH=$PATH:/data/bigdata/app/cassandra/bin">>/home/fangyu.fu/.bash_profile && source /home/fangyu.fu/.bash_profile
+#
+- name: Deploy cassandra.yaml
+  template: src=cassandra.yaml dest=/data/bigdata/app/cassandra/conf
+
+- name: Deploy jvm.options
+  template: src=jvm.options dest=/data/bigdata/app/cassandra/conf
+
+- name: Deploy logback.xml
+  template: src=logback.xml dest=/data/bigdata/app/cassandra/conf
+
+- name: Start cassandra
+  shell: nohup /data/bigdata/app/{{cassandra_version_name}}/bin/cassandra -f 2>&1 1>/data/bigdata/log/cassandra.log &

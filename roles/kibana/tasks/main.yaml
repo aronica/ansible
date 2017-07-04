@@ -1,0 +1,40 @@
+---
+- name: Create /data/bigdata
+  file: path=/data/bigdata state=directory
+
+- name: Create Download Directory
+  file: path=/data/bigdata/download state=directory
+
+- name: Create Directory
+  file: path=/data/bigdata/download state=directory
+
+- name: Create App Directory
+  file: path=/data/bigdata/app state=directory
+
+- name: Download Elasticsearch Binary
+  unarchive: src=/data/bigdata/app/download/{{kibana_version_gz}} dest=/data/bigdata/app
+
+- name: Remove old link file
+  file: path=/data/bigdata/app/kibana state=absent
+      
+- name: Add Soft link
+  file: src=/data/bigdata/app/{{kibana_version}} dest=/data/bigdata/app/kibana state=link 
+#- name: Add bin to $PATH
+#  shell: echo "export PATH=$PATH:/data/bigdata/app/cassandra/bin">>/home/fangyu.fu/.bash_profile && source /home/fangyu.fu/.bash_profile
+#
+- name: Deploy kibana.yml
+  template: src=kibana.yml dest=/data/bigdata/app/kibana/config
+
+- name: Deploy jvm.options
+  template: src=jvm.options dest=/data/bigdata/app/kibana/config
+
+- name: Kill old instance
+  shell: |
+    PID=`ps -aef|grep "kibana"|grep -v grep|awk -F' ' '{print $2}'`
+    echo "$PID">/tmp/es.pid
+    if [ -n "${PID}" ];then
+      kill ${PID}
+    fi
+
+- name: Start Kibana
+  shell: nohup /data/bigdata/app/kibana/bin/kibana 2>&1 1>/data/bigdata/logs/es.log &

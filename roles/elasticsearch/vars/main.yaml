@@ -1,0 +1,8 @@
+cluster_name: dtapp
+data_file_directories: /data/var/lib/cassandra/data
+commitlog_directory: /data/var/lib/cassandra/log
+saved_caches_directory: /data/var/lib/cassandra/caches
+hints_directory: /data/var/lib/cassandra/hints
+seed: wg-ais-dispatch-arck-7
+es_version: elasticsearch-5.4.2
+es_version_name: elasticsearch-5.4.2

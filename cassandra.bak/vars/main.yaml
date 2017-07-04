@@ -1,0 +1,6 @@
+cluster_name: feature_cluster
+data_file_directories: /data/var/lib/cassandra/data
+commitlog_directory: /data/var/lib/cassandra/log
+saved_caches_directory: /data/var/lib/cassandra/caches
+hints_directory: /data/var/lib/cassandra/hints
+seeds: 192.168.80.138
